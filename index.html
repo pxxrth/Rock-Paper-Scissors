@@ -1,142 +1,77 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8">!
-        <title>Rock-Paper-Scissors</title>
-    </head>
+<head>
+    <meta charset="UTF-8">
+    <title>Rock-Paper-Scissors</title>
+</head>
+<body>
+    <button id="rock">Rock</button>
+    <button id="paper">Paper</button>
+    <button id="scissors">Scissors</button>
+    
+    <div id="result"></div>
+    <div id="score"></div>
 
     <script>
+        const resultDiv = document.getElementById("result");
+        const scoreDiv = document.getElementById("score");
+        const buttons = document.querySelectorAll("button");
+
+        let humanScore = 0;
+        let computerScore = 0;
+        let roundsPlayed = 0;
+        const maxRounds = 5;  // Limit to 5 rounds
+
         function getComputerChoice() {
-            const randomValue = Math.floor(Math.random() * 3)
-            const choice = ["rock", "paper", "scissors"];
-            return choice[randomValue];
-            }
-        
-        
-        function getHumanChoice() {
-            const choose = prompt("Choose your input")
-            if (choose === null) {
-                return "nigga";
-            } else if (choose.trim() === "") {
-                return "Empty"
-            } else {
-                return choose.toLowerCase();
-            }      
+            const choices = ["rock", "paper", "scissors"];
+            return choices[Math.floor(Math.random() * 3)];
         }
-        
 
-        let humanScore = 0
-        let computerScore = 0
-        
-        function playRound(humanSelection , computerSelection) {
-            if (humanSelection === "rock" && computerSelection === "paper") {
-                computerScore++;
-                return "Computer won";
-            } else if (humanSelection === "rock" && computerSelection === "scissors") {
+        function playRound(humanSelection) {
+            if (roundsPlayed >= maxRounds) return;  // Stop if max rounds reached
+
+            const computerSelection = getComputerChoice();
+            let result = "";
+
+            if (humanSelection === computerSelection) {
+                result = "It's a tie!";
+            } else if (
+                (humanSelection === "rock" && computerSelection === "scissors") ||
+                (humanSelection === "paper" && computerSelection === "rock") ||
+                (humanSelection === "scissors" && computerSelection === "paper")
+            ) {
+                result = "You won!";
                 humanScore++;
-                return "You won";
-            } else if (humanSelection === "paper" && computerSelection === "scissors") {
-                computerScore++;
-                return "Computer won";
-            } else if (humanSelection === "paper" && computerSelection === "rock") {
-                humanScore++;
-                return "You won";
-            } else if (humanSelection === "scissors" && computerSelection === "rock") {
-                computerScore++;
-                return "Computer won";
-            } else if (humanSelection === "scissors" && computerSelection === "paper") {
-                humanScore++;
-                return "You won";
-            } else if (humanSelection === computerSelection) {
-                return "Try Again niggas"
             } else {
-                return "Invalid Input";
+                result = "Computer won!";
+                computerScore++;
             }
-              
-            
 
-        }
-        console.log("--Round 1--")
-        const humanSelection = getHumanChoice();
-        const computerSelection = getComputerChoice();
-        
-        console.log("Computer chose:", computerSelection)
-        console.log("You chose:", humanSelection)
+            roundsPlayed++;
 
-        console.log(playRound(humanSelection, computerSelection));
-        
-        console.log("Human Score:", humanScore);
-        console.log("Computer Score:", computerScore);
+            resultDiv.textContent = `Round ${roundsPlayed}: You chose ${humanSelection}, Computer chose ${computerSelection}. ${result}`;
+            scoreDiv.textContent = `Score - You: ${humanScore} | Computer: ${computerScore}`;
 
-        console.log("--Round 2--")
-        const humanSelection2 = getHumanChoice();
-        const computerSelection2 = getComputerChoice();
-        
-        console.log("Computer chose:", computerSelection2)
-        console.log("You chose:", humanSelection2)
+            // Check if 5 rounds are completed
+            if (roundsPlayed === maxRounds) {
+                let finalMessage = humanScore > computerScore 
+                    ? "Game over! You won the game!" 
+                    : humanScore < computerScore 
+                    ? "Game over! Computer won the game!" 
+                    : "Game over! It's a tie!";
+                
+                resultDiv.textContent += `\n${finalMessage}`;
 
-        console.log(playRound(humanSelection2, computerSelection2));
-        
-        console.log("Human Score:", humanScore);
-        console.log("Computer Score:", computerScore);
-
-        console.log("--Round 3--")
-        const humanSelection3 = getHumanChoice();
-        const computerSelection3 = getComputerChoice();
-        
-        console.log("Computer chose:", computerSelection3)
-        console.log("You chose:", humanSelection3)
-
-        console.log(playRound(humanSelection3, computerSelection3));
-        
-        console.log("Human Score:", humanScore);
-        console.log("Computer Score:", computerScore);
-
-        console.log("--Round 4--")
-        const humanSelection4 = getHumanChoice();
-        const computerSelection4 = getComputerChoice();
-        
-        console.log("Computer chose:", computerSelection4)
-        console.log("You chose:", humanSelection4)
-
-        console.log(playRound(humanSelection4, computerSelection4));
-        
-        console.log("Human Score:", humanScore);
-        console.log("Computer Score:", computerScore);
-
-        console.log("--Round 5--")
-        const humanSelection5 = getHumanChoice();
-        const computerSelection5 = getComputerChoice();
-        
-        console.log("Computer chose:", computerSelection5)
-        console.log("You chose:", humanSelection5)
-
-        console.log(playRound(humanSelection5, computerSelection5));
-        
-        console.log("Human Score:", humanScore);
-        console.log("Computer Score:", computerScore);
-
-        function result(humanScore, computerScore) {
-            if (humanScore > computerScore) {
-                return "You Won";
-            } else if (humanScore === computerScore) {
-                return "Haha nigga you lost";
-            } else {
-                return "You lost nigga";
+                // Disable buttons after 5 rounds
+                buttons.forEach(button => button.disabled = true);
             }
         }
-        console.log(result())
 
-        
+        // Add event listeners for buttons
+        document.getElementById("rock").addEventListener("click", () => playRound("rock"));
+        document.getElementById("paper").addEventListener("click", () => playRound("paper"));
+        document.getElementById("scissors").addEventListener("click", () => playRound("scissors"));
 
-         
-        
-        
-        
-        
     </script>
-
-    <body>
-
-    </body>
+</body>
 </html>
